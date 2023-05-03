@@ -12,7 +12,7 @@ namespace ChatGPT;
 
 public static class Defaults
 {
-    public const string WelcomeMessage = "Hi! I'm Clippy, your Windows Assistant. Would you like to get some assistance?";
+    public const string WelcomeMessage = "Hi! I'm Chad, your Assistant. Would you like to get some assistance?";
 
     public const decimal DefaultTemperature = 0.7m;
 
@@ -26,7 +26,7 @@ public static class Defaults
 
     public const string DefaultModel = "gpt-3.5-turbo";
     
-    public const string DefaultDirections = "You are a helpful assistant named Clippy. Write answers in Markdown blocks. For code blocks always define used language.";
+    public const string DefaultDirections = "You are a helpful assistant named Chad. Write answers in Markdown blocks. For code blocks always define used language.";
 
     public const string DefaultMessageFormat = "Markdown";
 

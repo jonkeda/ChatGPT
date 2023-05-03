@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AI.Model.Json.ChatGPT;
 using ChatGPT.Model.Services;
 using ChatGPT.ViewModels.Chat;
@@ -31,6 +32,7 @@ public partial class MainViewModel
         get => _currentChat;
         set => SetProperty(ref _currentChat, value);
     }
+
 
     [JsonIgnore]
     public IAsyncRelayCommand AddChatCommand { get; }
@@ -72,6 +74,7 @@ public partial class MainViewModel
         };
     }
 
+ 
     private async Task AddChatActionAsync()
     {
         NewChatCallback();

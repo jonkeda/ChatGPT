@@ -12,6 +12,7 @@ public partial class MobileLayoutViewModel : LayoutViewModel
     {
         Name = "Mobile";
 
+        ShowSearch = false;
         ShowChats = false;
         ShowSettings = false;
         ShowPrompts = false;
@@ -39,6 +40,7 @@ public partial class MobileLayoutViewModel : LayoutViewModel
         }
         else
         {
+            ShowSearch = false;
             ShowSettings = true;
             ShowChats = false;
             ShowPrompts = false;
@@ -54,6 +56,7 @@ public partial class MobileLayoutViewModel : LayoutViewModel
         }
         else
         {
+            ShowSearch = false;
             ShowChats = true;
             ShowSettings = false;
             ShowPrompts = false;
@@ -69,7 +72,24 @@ public partial class MobileLayoutViewModel : LayoutViewModel
         }
         else
         {
+            ShowSearch = false;
             ShowPrompts = true;
+            ShowChats = false;
+            ShowSettings = false;
+            ShowMenu = true;
+        }
+    }
+
+    protected override void ShowSearchAction()
+    {
+        if (ShowMenu)
+        {
+            HideMenusAction();
+        }
+        else
+        {
+            ShowSearch = true;
+            ShowPrompts = false;
             ShowChats = false;
             ShowSettings = false;
             ShowMenu = true;
@@ -78,6 +98,7 @@ public partial class MobileLayoutViewModel : LayoutViewModel
 
     private void HideMenusAction()
     {
+        ShowSearch = false;
         ShowSettings = false;
         ShowChats = false;
         ShowPrompts = false;
@@ -88,6 +109,7 @@ public partial class MobileLayoutViewModel : LayoutViewModel
     {
         return new MobileLayoutViewModel()
         {
+            ShowSearch = ShowSearch,
             ShowChats = ShowChats,
             ShowSettings = ShowSettings,
             ShowPrompts = ShowPrompts,

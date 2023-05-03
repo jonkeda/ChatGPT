@@ -28,7 +28,7 @@
     <SelectingItemsControl Name="MessagesItemsControl"
                            ItemsSource="{Binding Messages}"
                            SelectedItem="{Binding CurrentMessage}"
-                           AutoScrollToSelectedItem="False">
+                           AutoScrollToSelectedItem="True">
       <SelectingItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
           <!-- TODO: Use VirtualizingStackPanel instead of StackPanel -->

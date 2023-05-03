@@ -33,14 +33,16 @@ public partial class MainViewModel : ObservableObject, IPluginContext
 
         CurrentLayout = MobileLayout;
 
-        Topmost = true;
+        //Topmost = true;
 
         InitPromptCallback();
 
         NewChatCallback();
 
         // Chats
-        
+
+        SearchChatCommand = new AsyncRelayCommand(SearchChatActionAsync);
+
         AddChatCommand = new AsyncRelayCommand(AddChatActionAsync);
 
         DeleteChatCommand = new AsyncRelayCommand(DeleteChatActionAsync);

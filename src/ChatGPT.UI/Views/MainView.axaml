@@ -19,11 +19,11 @@
             <objectModel:ObservableCollection x:TypeArguments="vmc:ChatMessageViewModel">
               <vmc:ChatMessageViewModel IsSent="False" IsAwaiting="False" IsError="False" CanRemove="False">
                 <vmc:ChatMessageViewModel.Role>system</vmc:ChatMessageViewModel.Role>
-                <vmc:ChatMessageViewModel.Message>Hi! I'm Clippy, your Windows Assistant. Would you like to get some assistance?</vmc:ChatMessageViewModel.Message>
+                <vmc:ChatMessageViewModel.Message>Hi! I'm Chad, your Assistant. Would you like to get some assistance?</vmc:ChatMessageViewModel.Message>
               </vmc:ChatMessageViewModel>
               <vmc:ChatMessageViewModel IsSent="True" IsAwaiting="False" IsError="False" CanRemove="False">
                 <vmc:ChatMessageViewModel.Role>system</vmc:ChatMessageViewModel.Role>
-                <vmc:ChatMessageViewModel.Message>Hi! I'm Clippy, your Windows Assistant. Would you like to get some assistance?</vmc:ChatMessageViewModel.Message>
+                <vmc:ChatMessageViewModel.Message>Hi! I'm Chad, your Assistant. Would you like to get some assistance?</vmc:ChatMessageViewModel.Message>
               </vmc:ChatMessageViewModel>
               <vmc:ChatMessageViewModel IsSent="False" IsAwaiting="False" IsError="False" CanRemove="True">
                 <vmc:ChatMessageViewModel.Role>user</vmc:ChatMessageViewModel.Role>

@@ -38,6 +38,7 @@
              VerticalContentAlignment="Center"
              Margin="8,0,12,0"
              Padding="8" 
+             
              FontSize="{DynamicResource PromptFontSize}">
       <TextBox.KeyBindings>
         <KeyBinding Command="{Binding #PromptView.InsertNewLine}" 

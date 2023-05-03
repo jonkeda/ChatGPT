@@ -12,6 +12,7 @@
              xmlns:prompts="clr-namespace:ChatGPT.Views.Prompts"
              xmlns:controls="clr-namespace:ChatGPT.Controls"
              xmlns:converters="clr-namespace:ChatGPT.Converters"
+             xmlns:search="clr-namespace:ChatGPT.Views.Search"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="700"
              x:Class="ChatGPT.Views.Layouts.DesktopLayoutView"
              x:CompileBindings="True" x:DataType="vm:MainViewModel">
@@ -42,6 +43,8 @@
       <Grid Name="WorkspaceGrid">
 
         <Grid.ColumnDefinitions>
+          <controls:CustomColumnDefinition BindWidth="{Binding DesktopLayout.SearchWidth, Mode=TwoWay, Converter={x:Static converters:GridLengthConverter.Instance}}"
+                                           IsVisible="{Binding DesktopLayout.ShowSearch}"/>
           <controls:CustomColumnDefinition BindWidth="{Binding DesktopLayout.ChatsWidth, Mode=TwoWay, Converter={x:Static converters:GridLengthConverter.Instance}}"
                                            IsVisible="{Binding DesktopLayout.ShowChats}"/>
           <ColumnDefinition Width="8" />
@@ -54,19 +57,23 @@
                                            IsVisible="{Binding DesktopLayout.ShowPrompts}"/>
         </Grid.ColumnDefinitions>
 
+        <search:SearchView Name="Search"
+                             IsVisible="{Binding DesktopLayout.ShowSearch}"
+                             Grid.Column="0" />
+
         <history:HistoryView Name="History" 
                              IsVisible="{Binding DesktopLayout.ShowChats}"
-                             Grid.Column="0" />
+                             Grid.Column="1" />
 
         <GridSplitter Name="HistorySplitter" 
                       ResizeBehavior="PreviousAndNext"
                       ResizeDirection="Columns"
                       Background="Transparent"
-                      Grid.Column="1" />
+                      Grid.Column="2" />
 
         <ContentControl Content="{Binding CurrentChat}"
                         VerticalAlignment="Top"
-                        Grid.Column="2">
+                        Grid.Column="3">
           <ContentControl.ContentTemplate>
             <DataTemplate DataType="vmc:ChatViewModel">
               <chat:ChatView />
@@ -78,14 +85,14 @@
                       ResizeBehavior="PreviousAndNext"
                       ResizeDirection="Columns"
                       Background="Transparent"
-                      Grid.Column="3" />
+                      Grid.Column="4" />
 
         <settings:SettingsView Name="Settings"
                                IsVisible="{Binding DesktopLayout.ShowSettings}" 
-                               Grid.Column="4"  />
+                               Grid.Column="5"  />
 
         <prompts:PromptsView Name="Prompts"
-                             Grid.Column="6"
+                             Grid.Column="7"
                              IsVisible="{Binding DesktopLayout.ShowPrompts}" />
 
       </Grid>
@@ -94,13 +101,6 @@
 
     <views:MainViewActionsView Grid.Column="0"
                                Grid.Row="1" />
-
-    <Image Grid.Column="1"
-           Grid.Row="1"
-           Name="ClippyImage"
-           Height="100"
-           Margin="-32,2,0,0"
-           Source="/Assets/clipart855284.png"/>
 
   </Grid>
 

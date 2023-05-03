@@ -7,13 +7,13 @@ namespace ChatGPT.Views.Layouts;
 
 public partial class DesktopLayoutView : UserControl
 {
-    private bool _draggingWindow;
+    //private bool _draggingWindow;
 
     public DesktopLayoutView()
     {
         InitializeComponent();
 
-        ClippyImage.PointerPressed += (_, e) =>
+/*        ClippyImage.PointerPressed += (_, e) =>
         {
             if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
             {
@@ -27,10 +27,10 @@ public partial class DesktopLayoutView : UserControl
             {
                 EndDrag(e);
             }
-        };
+        };*/
     }
 
-    private void MoveDrag(PointerPressedEventArgs e)
+/*    private void MoveDrag(PointerPressedEventArgs e)
     {
         _draggingWindow = true;
 
@@ -46,4 +46,4 @@ public partial class DesktopLayoutView : UserControl
     {
         _draggingWindow = false;
     }
-}
+*/}

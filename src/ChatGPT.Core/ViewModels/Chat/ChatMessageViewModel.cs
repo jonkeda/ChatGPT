@@ -109,6 +109,15 @@ public class ChatMessageViewModel : ObservableObject
     }
 
     [JsonIgnore]
+    public bool AutoFocus
+    {
+        get
+        {
+            return string.IsNullOrEmpty(Message);
+        }
+    }
+
+    [JsonIgnore]
     public IAsyncRelayCommand AddCommand { get; }
 
     [JsonIgnore]

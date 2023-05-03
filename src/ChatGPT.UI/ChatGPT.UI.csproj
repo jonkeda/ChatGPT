@@ -15,6 +15,9 @@
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\openai.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="$(AvaloniaVersion)" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersion)" />
@@ -28,5 +31,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChatGPT.Core\ChatGPT.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\Search\SearchActionsView.axaml.cs">
+      <DependentUpon>SearchActionsView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Search\SearchView.axaml.cs">
+      <DependentUpon>SearchView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

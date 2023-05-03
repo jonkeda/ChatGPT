@@ -8,6 +8,7 @@ public partial class ChatMessagePromptView : UserControl
     public ChatMessagePromptView()
     {
         InitializeComponent();
+        Prompt.AttachedToVisualTree += (s, e) => Prompt.Focus();
     }
 
     public void InsertNewLine()

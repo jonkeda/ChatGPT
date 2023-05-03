@@ -14,11 +14,14 @@ public abstract partial class LayoutViewModel : ObservableObject
     private bool _showSettings;
     private bool _showChats;
     private bool _showPrompts;
+    private bool _showSearch;
 
     [JsonConstructor]
     protected LayoutViewModel()
     {
         ShowSettingsCommand = new RelayCommand(ShowSettingsAction);
+
+        ShowSearchCommand = new RelayCommand(ShowSearchAction);
 
         ShowChatsCommand = new RelayCommand(ShowChatsAction);
 
@@ -37,6 +40,13 @@ public abstract partial class LayoutViewModel : ObservableObject
     {
         get => _showSettings;
         set => SetProperty(ref _showSettings, value);
+    }
+
+    [JsonPropertyName("showSearch")]
+    public bool ShowSearch
+    {
+        get => _showSearch;
+        set => SetProperty(ref _showSearch, value);
     }
 
     [JsonPropertyName("showChats")]
@@ -60,6 +70,9 @@ public abstract partial class LayoutViewModel : ObservableObject
     public IRelayCommand ShowChatsCommand { get; }
 
     [JsonIgnore]
+    public IRelayCommand ShowSearchCommand { get; }
+
+    [JsonIgnore]
     public IRelayCommand ShowPromptsCommand { get; }
 
     public abstract Task BackAsync();
@@ -67,6 +80,8 @@ public abstract partial class LayoutViewModel : ObservableObject
     protected abstract void ShowSettingsAction();
 
     protected abstract void ShowChatsAction();
+
+    protected abstract void ShowSearchAction();
 
     protected abstract void ShowPromptsAction();
 

@@ -17,7 +17,7 @@
   </Application.Styles>
   <TrayIcon.Icons>
     <TrayIcons>
-      <TrayIcon Icon="/Assets/clipart855284.ico" Clicked="TrayIcon_OnClicked" ToolTipText="ChatGPT">
+      <TrayIcon Icon="/Assets/openai.ico" Clicked="TrayIcon_OnClicked" ToolTipText="ChatGPT">
         <NativeMenu.Menu>
           <NativeMenu>
             <NativeMenuItem Header="Toggle Show" Click="ToggleShow_OnClick" />
