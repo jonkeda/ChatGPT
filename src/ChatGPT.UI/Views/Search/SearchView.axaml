@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ChatGPT.ViewModels;assembly=ChatGPT.Core"
+             xmlns:vmc="clr-namespace:ChatGPT.ViewModels.Chat;assembly=ChatGPT.Core"
+             xmlns:search="clr-namespace:ChatGPT.Views.Search"
+             xmlns:views="clr-namespace:ChatGPT.Views"
+             xmlns:objectModel="clr-namespace:System.Collections.ObjectModel;assembly=System.ObjectModel"
+             xmlns:search1="clr-namespace:ChatGPT.ViewModels.Search;assembly=ChatGPT.Core"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="650"
+             x:Class="ChatGPT.Views.Search.SearchView"
+             x:CompileBindings="True" x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+    <vm:MainViewModel>
+      <vm:MainViewModel.Chats>
+        <objectModel:ObservableCollection x:TypeArguments="vmc:ChatViewModel">
+          <vmc:ChatViewModel Name="Chat 1" />
+          <vmc:ChatViewModel Name="Chat 2" />
+          <vmc:ChatViewModel Name="Chat 3" />
+        </objectModel:ObservableCollection>
+      </vm:MainViewModel.Chats>
+    </vm:MainViewModel>
+  </Design.DataContext>
+  <DockPanel VerticalAlignment="Stretch">
+    <views:HeaderView Header="Found"
+                      Margin="0,6,0,12"
+                      DockPanel.Dock="Top" />
+    <search:SearchActionsView DockPanel.Dock="Bottom" 
+                                Margin="0,16,0,0"/>
+    
+    <StackPanel Orientation="Vertical"
+                IsVisible="{Binding !!CurrentChat}"
+                DockPanel.Dock="Bottom">
+      <TextBlock Text="Search:"
+                 Margin="4"
+                 Padding="0,4,0,4"
+                 FontSize="{DynamicResource SettingHeaderFontSize}" />
+      <TextBox Text="{Binding SearchText}"
+               Margin="4"
+               Padding="8"
+               FontSize="{DynamicResource SettingContentFontSize}"/>
+    </StackPanel>
+
+    <TreeView  ItemsSource="{Binding FoundChats}"
+               SelectedItem="{Binding CurrentFoundChat}"
+               SelectionMode="Single"
+               AutoScrollToSelectedItem="True"
+               Background="Transparent">
+      <TreeView.DataTemplates>
+        <DataTemplate DataType="search1:FoundChatMessageViewModel">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding Title}"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="6,0,6,0" />
+          </StackPanel>
+        </DataTemplate>
+
+      </TreeView.DataTemplates>
+      <TreeView.ItemTemplate>
+        <TreeDataTemplate DataType="search1:FoundChatViewModel" ItemsSource="{Binding Messages}">
+          <StackPanel Orientation="Horizontal">
+            <PathIcon Data="{DynamicResource ChatIcon}"
+                      Width="24"
+                      Height="24"
+                      Opacity="0.5"
+                      Foreground="{DynamicResource SettingsIconBrush}" />
+            <TextBlock Text="{Binding Chat.Name}"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Margin="6,0,6,0" />
+          </StackPanel>
+        </TreeDataTemplate>
+      </TreeView.ItemTemplate>
+    </TreeView>
+    
+  </DockPanel>
+</UserControl>

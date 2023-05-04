@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:ChatGPT.Views"
+             xmlns:childChat="clr-namespace:ChatGPT.ViewModels.ChildChat;assembly=ChatGPT.Core"
+             xmlns:childChat1="clr-namespace:ChatGPT.Views.ChildChat"
+             mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="650"
+             x:Class="ChatGPT.Views.ChildChat.AddChildChatView"
+             x:CompileBindings="True" x:DataType="childChat:ChildChatViewModel">
+  <DockPanel VerticalAlignment="Stretch">
+    <views:HeaderView Header="New Child Chat"
+                      Margin="0,6,0,12"
+                      DockPanel.Dock="Top" />
+    <childChat1:AddChildChatActionsView DockPanel.Dock="Bottom"
+                             Margin="0,16,0,0"/>
+
+    <StackPanel Orientation="Vertical">
+      <TextBlock Text="Name:"
+                 Margin="4"
+                 Padding="0,4,0,4"
+                 FontSize="{DynamicResource SettingHeaderFontSize}" />
+      <TextBox Text="{Binding Prompt}"
+               Margin="4"
+               Padding="8"
+               FontSize="{DynamicResource SettingContentFontSize}"/>
+    </StackPanel>
+
+  </DockPanel>
+</UserControl>
