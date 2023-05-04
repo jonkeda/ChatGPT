@@ -23,6 +23,9 @@ public class ChatMessageViewModel : ObservableObject
     private Func<ChatMessageViewModel, Task>? _copy;
     private Action<ChatMessageViewModel>? _remove;
     private Func<ChatMessageViewModel, Task>? _addChat;
+    private int _promptTokens;
+    private int _completionTokens;
+    private int _totalTokens;
 
     [JsonConstructor]
     public ChatMessageViewModel()
@@ -109,6 +112,27 @@ public class ChatMessageViewModel : ObservableObject
     {
         get => _isEditing;
         set => SetProperty(ref _isEditing, value);
+    }
+
+    [JsonPropertyName("promptTokens")]
+    public int PromptTokens
+    {
+        get => _promptTokens;
+        set => SetProperty(ref _promptTokens, value);
+    }
+
+    [JsonPropertyName("completionTokens")]
+    public int CompletionTokens
+    {
+        get => _completionTokens;
+        set => SetProperty(ref _completionTokens, value);
+    }
+
+    [JsonPropertyName("totalTokens")]
+    public int TotalTokens
+    {
+        get => _totalTokens;
+        set => SetProperty(ref _totalTokens, value);
     }
 
     [JsonIgnore]

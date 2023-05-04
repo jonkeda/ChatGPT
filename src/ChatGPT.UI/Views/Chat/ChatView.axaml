@@ -23,9 +23,11 @@
       </vm:ChatViewModel.Messages>
     </vm:ChatViewModel>
   </Design.DataContext>
-  <Grid>
-    <childChat:AddChildChatView DataContext="{Binding ChildChat}"
-                                IsVisible="{Binding IsEnabled}"/>
+  <DockPanel>
+    <Grid DockPanel.Dock="Bottom" 
+          IsVisible="{Binding !ChildChat.IsEnabled}">
+      <chat:ChatUsageView DataContext="{Binding CurrentMessage}"/>
+    </Grid>
 
     <ScrollViewer Name="ChatScrollViewer"
                   HorizontalScrollBarVisibility="Disabled"
@@ -50,5 +52,9 @@
       </SelectingItemsControl>
     </ScrollViewer>
 
-  </Grid>
+    <childChat:AddChildChatView DataContext="{Binding ChildChat}"
+                                VerticalAlignment="Stretch"
+                                IsVisible="{Binding IsEnabled}"/>
+
+  </DockPanel>
 </UserControl>

@@ -218,6 +218,10 @@ public partial class MainViewModel : ObservableObject, IPluginContext
         foreach (var childChat in chat.Chats)
         {
             childChat.Settings = settings;
+            foreach (var message in childChat.Messages)
+            {
+                childChat.SetMessageActions(message);
+            }
             SetChildChatSettings(childChat, settings);
         }
     }

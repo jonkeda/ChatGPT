@@ -1,10 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data.SqlTypes;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using AI;
 using AI.Model.Json.Chat;
 using AI.Model.Services;
@@ -40,12 +45,12 @@ public class ChatViewModel : ObservableObject
     }
 
     public ChatViewModel(
-        string directions = "You are a helpful assistant.", 
+        string directions = "You are a helpful assistant.",
         decimal temperature = 0.7m,
         decimal topP = 1m,
         decimal presencePenalty = 0m,
         decimal frequencyPenalty = 0m,
-        int maxTokens = 2000, 
+        int maxTokens = 2000,
         string? apiKey = null,
         string model = "gpt-3.5-turbo") : this()
     {
@@ -116,12 +121,7 @@ public class ChatViewModel : ObservableObject
         message.SetSendAction(SendAsync);
         message.SetCopyAction(CopyAsync);
         message.SetRemoveAction(Remove);
-        message.SetAddChatAction(SetAddChatAsync);
-    }
-
-    public async Task SetAddChatAsync(ChatMessageViewModel message)
-    {
-        _childChat.Enable();
+        message.SetAddChatAction(AddChildChatAsync);
     }
 
     public async Task CopyAsync(ChatMessageViewModel message)
@@ -184,21 +184,21 @@ public class ChatViewModel : ObservableObject
             sendMessage.IsSent = true;
 
             var isCanceled = false;
-            
+            ChatResultViewModel? result = null;
             if (!onlyAddMessage)
             {
                 if (string.IsNullOrWhiteSpace(sendMessage.Message))
                 {
                     Messages.Remove(sendMessage);
                 }
-                
+
                 var chatPrompt = CreateChatMessages();
 
                 _cts = new CancellationTokenSource();
 
                 try
                 {
-                    var result = await CreateResultMessageAsync(chatPrompt, _cts.Token);
+                    result = await CreateResultMessageAsync(chatPrompt, _cts.Token);
                     isError = result == null || result.IsError;
                 }
                 catch (OperationCanceledException)
@@ -220,7 +220,10 @@ public class ChatViewModel : ObservableObject
                     Message = "",
                     IsSent = false,
                     CanRemove = true,
-                    Format = Settings.Format
+                    Format = Settings.Format,
+                    PromptTokens = result!.PromptTokens,
+                    CompletionTokens = result!.CompletionTokens,
+                    TotalTokens = result!.TotalTokens,
                 };
                 SetMessageActions(nextMessage);
                 Messages.Add(nextMessage);
@@ -247,7 +250,7 @@ public class ChatViewModel : ObservableObject
         }
 
         // Sending...
-        
+
         var resultMessage = new ChatMessageViewModel
         {
             Role = "assistant",
@@ -276,6 +279,9 @@ public class ChatViewModel : ObservableObject
         {
             resultMessage.Message = result.Message;
             resultMessage.IsError = result.IsError;
+            resultMessage.PromptTokens = result.PromptTokens;
+            resultMessage.CompletionTokens = result.CompletionTokens;
+            resultMessage.TotalTokens = result.TotalTokens;
         }
 
         resultMessage.Format = Settings.Format;
@@ -317,7 +323,7 @@ public class ChatViewModel : ObservableObject
             {
                 chatMessages.Add(new ChatMessage
                 {
-                    Role = message.Role, 
+                    Role = message.Role,
                     Content = message.Message
                 });
             }
@@ -349,7 +355,7 @@ public class ChatViewModel : ObservableObject
         {
             return new ChatResponseError
             {
-                Error = new ChatError {Message = "The OpenAI api key is not set."}
+                Error = new ChatError { Message = "The OpenAI api key is not set." }
             };
         }
 
@@ -362,12 +368,12 @@ public class ChatViewModel : ObservableObject
         {
             return new ChatResponseError
             {
-                Error = new ChatError {Message = "The OpenAI api model is not set."}
+                Error = new ChatError { Message = "The OpenAI api model is not set." }
             };
         }
 
         // Settings
-        
+
         if (restoreApiKey)
         {
             Environment.SetEnvironmentVariable(Constants.EnvironmentVariableApiKey, chatSettings.ApiKey);
@@ -434,7 +440,7 @@ public class ChatViewModel : ObservableObject
             Message = default,
             IsError = false
         };
-   
+
         var responseData = await GetResponseDataAsync(chatServiceSettings, Settings, token);
         if (responseData is null)
         {
@@ -452,6 +458,13 @@ public class ChatViewModel : ObservableObject
             var message = success.Choices?.FirstOrDefault()?.Message?.Content?.Trim();
             result.Message = message ?? "";
             result.IsError = false;
+            if (success.Usage != null)
+            {
+                result.PromptTokens = success.Usage.PromptTokens;
+                result.CompletionTokens = success.Usage.CompletionTokens;
+                result.TotalTokens = success.Usage.TotalTokens;
+            }
+
         }
 
         return result;
@@ -517,5 +530,67 @@ public class ChatViewModel : ObservableObject
             Messages = CopyMessages(out var currentMessage),
             CurrentMessage = currentMessage
         };
+    }
+
+
+    public async Task AddChildChatAsync(ChatMessageViewModel message)
+    {
+        _childChat.SetMessage(message);
+    }
+
+    public void CreateNewChildChat(ChildChatViewModel child)
+    {
+        if (child.ChatCreation == ChatCreation.Single)
+        {
+            if (string.IsNullOrEmpty(child.Name))
+            {
+                child.Name = "Chat";
+            }
+
+            AddNewChildChat(child, child.Prompt);
+        }
+        else if (child is { ChatCreation: ChatCreation.PerLine, Data: { } })
+        {
+            var sr = new StringReader(child.Data);
+            while (sr.ReadLine() is { } line)
+            {
+                if (string.IsNullOrEmpty(line))
+                {
+                    continue;
+                }
+                child.Name = line;
+                AddNewChildChat(child, $"{child.Prompt}\n {line}");
+            }
+        }
+
+    }
+
+    private void AddNewChildChat(ChildChatViewModel child, string? prompt)
+    {
+        var childChat = new ChatViewModel(Settings!)
+        {
+            Name = child.Name
+        };
+        childChat.AddMessage("system", child.SettingPrompt, true, false);
+        childChat.AddMessage("user", prompt, false, false);
+        Chats.Add(childChat);
+    }
+
+    public void AddMessage(string role, string? message, bool isSent, bool canRemove)
+    {
+        if (string.IsNullOrEmpty(message))
+        {
+            return;
+        }
+        var msg = new ChatMessageViewModel 
+        {
+            Format = Defaults.TextMessageFormat,
+            Role = role, 
+            Message = message,
+            IsSent = isSent,
+            CanRemove = canRemove
+        };
+        SetMessageActions(msg);
+        Messages.Add(msg);
     }
 }

@@ -74,7 +74,6 @@ public partial class MainViewModel
         };
     }
 
- 
     private async Task AddChatActionAsync()
     {
         NewChatCallback();
@@ -210,9 +209,45 @@ public partial class MainViewModel
     {
         if (CurrentChat is { })
         {
-            Chats.Remove(CurrentChat);
-            CurrentChat = Chats.LastOrDefault();
+            DeleteChat(Chats);
         }
+    }
+
+    private bool DeleteChat(ObservableCollection<ChatViewModel> chats)
+    {
+        int i = chats.IndexOf(CurrentChat!);
+        if (i < 0)
+        {
+            foreach (var chat in chats)
+            {
+                if (DeleteChat(chat.Chats))
+                {
+                    if (CurrentChat == null)
+                    {
+                        CurrentChat = chat;
+                    }
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        chats.Remove(CurrentChat!);
+        if (i < chats.Count)
+        {
+            CurrentChat = chats[i];
+        }
+        else if (i-1 < chats.Count
+                 && i-1 >= 0)
+        {
+            CurrentChat = chats[i-1];
+        }
+        else
+        {
+            CurrentChat = null;
+        }
+
+        return true;
     }
 
     private async Task OpenChatCallbackAsync(Stream stream)
