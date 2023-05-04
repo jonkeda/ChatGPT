@@ -9,6 +9,7 @@ using AI;
 using AI.Model.Json.Chat;
 using AI.Model.Services;
 using ChatGPT.Model.Services;
+using ChatGPT.ViewModels.ChildChat;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace ChatGPT.ViewModels.Chat;
@@ -21,11 +22,15 @@ public class ChatViewModel : ObservableObject
     private ChatMessageViewModel? _currentMessage;
     private bool _isEnabled;
     private CancellationTokenSource? _cts;
+    private ObservableCollection<ChatViewModel> _chats;
+    private ChildChatViewModel _childChat;
 
     [JsonConstructor]
     public ChatViewModel()
     {
         _messages = new ObservableCollection<ChatMessageViewModel>();
+        _chats = new ObservableCollection<ChatViewModel>();
+        _childChat = new ChildChatViewModel(this);
         _isEnabled = true;
     }
 
@@ -78,6 +83,13 @@ public class ChatViewModel : ObservableObject
         set => SetProperty(ref _messages, value);
     }
 
+    [JsonPropertyName("chats")]
+    public ObservableCollection<ChatViewModel> Chats
+    {
+        get => _chats;
+        set => SetProperty(ref _chats, value);
+    }
+
     [JsonPropertyName("currentMessage")]
     public ChatMessageViewModel? CurrentMessage
     {
@@ -92,11 +104,24 @@ public class ChatViewModel : ObservableObject
         set => SetProperty(ref _isEnabled, value);
     }
 
+    [JsonIgnore]
+    public ChildChatViewModel ChildChat
+    {
+        get => _childChat;
+        set => SetProperty(ref _childChat, value);
+    }
+
     public void SetMessageActions(ChatMessageViewModel message)
     {
         message.SetSendAction(SendAsync);
         message.SetCopyAction(CopyAsync);
         message.SetRemoveAction(Remove);
+        message.SetAddChatAction(SetAddChatAsync);
+    }
+
+    public async Task SetAddChatAsync(ChatMessageViewModel message)
+    {
+        _childChat.Enable();
     }
 
     public async Task CopyAsync(ChatMessageViewModel message)

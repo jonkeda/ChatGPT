@@ -171,6 +171,8 @@ public partial class MainViewModel : ObservableObject, IPluginContext
                 {
                     chat.SetMessageActions(message);
                 }
+
+                SetChildChatSettings(chat, chat.Settings);
             }
 
             Chats = workspace.Chats;
@@ -197,6 +199,39 @@ public partial class MainViewModel : ObservableObject, IPluginContext
         }
 
         Topmost = workspace.Topmost;
+    }
+
+    private void ResetChildChatSettings(ObservableCollection<ChatViewModel>? chats)
+    {
+        if (chats == null)
+        {
+            return;
+        }
+        foreach (var chat in chats)
+        {
+            SetChildChatSettings(chat, chat.Settings);
+        }
+    }
+
+    private void SetChildChatSettings(ChatViewModel chat, ChatSettingsViewModel? settings)
+    {
+        foreach (var childChat in chat.Chats)
+        {
+            childChat.Settings = settings;
+            SetChildChatSettings(childChat, settings);
+        }
+    }
+
+    private void ClearChildChatSettings(ObservableCollection<ChatViewModel>? chats)
+    {
+        if (chats == null)
+        {
+            return;
+        }
+        foreach (var chat in chats)
+        {
+            SetChildChatSettings(chat, null);
+        }
     }
 
     public async Task LoadSettingsAsync()
@@ -250,6 +285,7 @@ public partial class MainViewModel : ObservableObject, IPluginContext
     public void SaveSettings()
     {
         var workspace = CreateWorkspace();
+        ClearChildChatSettings(workspace.Chats);
         var factory = Defaults.Locator.GetService<IStorageFactory>();
         var storage = factory?.CreateStorageService<WorkspaceViewModel>();
         if (storage is { })
@@ -258,6 +294,8 @@ public partial class MainViewModel : ObservableObject, IPluginContext
                 workspace, 
                 "Settings", 
                 MainViewModelJsonContext.s_instance.WorkspaceViewModel);
+
+            ResetChildChatSettings(workspace.Chats);
         }
     }
 }

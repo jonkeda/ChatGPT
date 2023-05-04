@@ -25,32 +25,27 @@
     <views:HeaderView Header="Chats"
                       Margin="0,6,0,12"
                       DockPanel.Dock="Top" />
-    <history:HistoryActionsView DockPanel.Dock="Bottom" 
+    <history:HistoryActionsView DockPanel.Dock="Bottom"
                                 Margin="0,16,0,0"/>
     <StackPanel Orientation="Vertical"
                 IsVisible="{Binding !!CurrentChat}"
                 DockPanel.Dock="Bottom">
-      <TextBlock Text="Name:" 
-                 Margin="4" 
-                 Padding="0,4,0,4" 
+      <TextBlock Text="Name:"
+                 Margin="4"
+                 Padding="0,4,0,4"
                  FontSize="{DynamicResource SettingHeaderFontSize}" />
-      <TextBox Text="{Binding CurrentChat.Name}" 
-               Margin="4" 
-               Padding="8" 
+      <TextBox Text="{Binding CurrentChat.Name}"
+               Margin="4"
+               Padding="8"
                FontSize="{DynamicResource SettingContentFontSize}"/>
     </StackPanel>
-    <ListBox ItemsSource="{Binding Chats}"
-             SelectedItem="{Binding CurrentChat}"
-             SelectionMode="Single"
-             AutoScrollToSelectedItem="True"
-             Background="Transparent">
-      <ListBox.ItemsPanel>
-        <ItemsPanelTemplate>
-          <VirtualizingStackPanel />
-        </ItemsPanelTemplate>
-      </ListBox.ItemsPanel>
-      <ListBox.DataTemplates>
-        <DataTemplate DataType="vmc:ChatViewModel">
+    <TreeView ItemsSource="{Binding Chats}"
+              SelectedItem="{Binding CurrentChat}"
+              SelectionMode="Single"
+              AutoScrollToSelectedItem="True"
+              Background="Transparent">
+      <TreeView.ItemTemplate>
+        <TreeDataTemplate DataType="vmc:ChatViewModel" ItemsSource="{Binding Chats}">
           <StackPanel Orientation="Horizontal">
             <PathIcon Data="{DynamicResource ChatIcon}"
                       Width="24"
@@ -62,8 +57,8 @@
                        VerticalAlignment="Center"
                        Margin="6,0,6,0" />
           </StackPanel>
-        </DataTemplate>
-      </ListBox.DataTemplates>
-    </ListBox>
+        </TreeDataTemplate>
+      </TreeView.ItemTemplate>
+    </TreeView>
   </DockPanel>
 </UserControl>

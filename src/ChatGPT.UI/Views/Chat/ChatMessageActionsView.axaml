@@ -84,6 +84,31 @@
                 Height="16"
                 Foreground="{DynamicResource MessageActionBrush}"/>
     </Button>
+  <!-- Add -->
+  <Button Name="Add"
+          Command="{Binding AddChatCommand}"
+          CommandParameter="Add"
+          ToolTip.Tip="Add"
+          HorizontalAlignment="Center"
+          Background="#00FFFFFF"
+          BorderBrush="#00000000"
+          BorderThickness="1"
+          CornerRadius="4"
+          Margin="0,0,0,0"
+          Padding="4,4,4,4"
+          MinWidth="24">
+    <Button.IsVisible>
+      <MultiBinding Converter="{x:Static BoolConverters.And}">
+        <Binding Path="IsSent" />
+        <Binding Path="IsAwaiting" Converter="{x:Static BoolConverters.Not}" />
+      </MultiBinding>
+    </Button.IsVisible>
+    <PathIcon Data="{DynamicResource AddIcon}"
+              Width="16"
+              Height="16"
+              Foreground="{DynamicResource MessageActionBrush}"/>
+  </Button>
+
   </StackPanel>
 </UserControl>
 

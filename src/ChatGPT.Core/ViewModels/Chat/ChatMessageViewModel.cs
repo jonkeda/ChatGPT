@@ -22,6 +22,7 @@ public class ChatMessageViewModel : ObservableObject
     private Func<ChatMessageViewModel, bool, Task>? _send;
     private Func<ChatMessageViewModel, Task>? _copy;
     private Action<ChatMessageViewModel>? _remove;
+    private Func<ChatMessageViewModel, Task>? _addChat;
 
     [JsonConstructor]
     public ChatMessageViewModel()
@@ -35,6 +36,8 @@ public class ChatMessageViewModel : ObservableObject
         CopyCommand = new RelayCommand(CopyAction);
 
         RemoveCommand = new RelayCommand(RemoveAction);
+
+        AddChatCommand = new RelayCommand(AddChatAction);
 
         SetRoleCommand = new RelayCommand<string>(SetRoleAction);
 
@@ -109,15 +112,6 @@ public class ChatMessageViewModel : ObservableObject
     }
 
     [JsonIgnore]
-    public bool AutoFocus
-    {
-        get
-        {
-            return string.IsNullOrEmpty(Message);
-        }
-    }
-
-    [JsonIgnore]
     public IAsyncRelayCommand AddCommand { get; }
 
     [JsonIgnore]
@@ -131,6 +125,9 @@ public class ChatMessageViewModel : ObservableObject
 
     [JsonIgnore]
     public IRelayCommand RemoveCommand { get; }
+
+    [JsonIgnore]
+    public IRelayCommand AddChatCommand { get; }
 
     [JsonIgnore]
     public IRelayCommand SetRoleCommand { get; }
@@ -226,6 +223,11 @@ public class ChatMessageViewModel : ObservableObject
     {
         _remove?.Invoke(this);
     }
+    
+    private void AddChatAction()
+    {
+        _addChat?.Invoke(this);
+    }
 
     private void SetRoleAction(string? role)
     {
@@ -302,6 +304,11 @@ public class ChatMessageViewModel : ObservableObject
         _remove = remove;
     }
 
+    public void SetAddChatAction(Func<ChatMessageViewModel, Task>? addChat)
+    {
+        _addChat = addChat;
+    }
+
     public ChatMessageViewModel Copy()
     {
         var message = new ChatMessageViewModel
@@ -319,7 +326,9 @@ public class ChatMessageViewModel : ObservableObject
         message.SetSendAction(_send);
         message.SetCopyAction(_copy);
         message.SetRemoveAction(_remove);
+        message.SetAddChatAction(_addChat);
 
         return message;
     }
+
 }

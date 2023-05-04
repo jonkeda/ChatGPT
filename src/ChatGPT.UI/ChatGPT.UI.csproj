@@ -33,6 +33,12 @@
     <ProjectReference Include="..\ChatGPT.Core\ChatGPT.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\ChildChat\AddChildChatActionsView.axaml.cs">
+      <DependentUpon>AddChildChatActionsView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ChildChat\AddChildChatView.axaml.cs">
+      <DependentUpon>AddChildChatView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Search\SearchActionsView.axaml.cs">
       <DependentUpon>SearchActionsView.axaml</DependentUpon>
     </Compile>
