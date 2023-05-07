@@ -26,5 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChatGPT\ChatGPT.csproj" />
+    <ProjectReference Include="..\Markdig.ChatGpt\Markdig.ChatGpt.csproj" />
   </ItemGroup>
 </Project>

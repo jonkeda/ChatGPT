@@ -29,6 +29,70 @@
                 VerticalScrollBarVisibility="Auto">
     <SelectingItemsControl Name="SettingsSelectingItemsControl">
 
+      <!-- Directions -->
+      <StackPanel Name="DirectionsStackPanel"
+                  Orientation="Vertical">
+        <TextBlock Text="Prompt:"
+                   Margin="8,2,8,2"
+                   Padding="0,4,0,4"
+                   FontSize="{DynamicResource SettingHeaderFontSize}" />
+        <TextBox Text="{Binding Directions}"
+                 Watermark="Chat prompt initial system directions"
+                 TextWrapping="Wrap"
+                 AcceptsReturn="True"
+                 Margin="8,0,8,0"
+                 Padding="8"
+                 MaxHeight="188"
+                 FontSize="{DynamicResource SettingContentFontSize}"
+                 ToolTip.Tip="The system message (directions) helps set the behavior of the assistant. Typically, a conversation is formatted with a system message first, followed by alternating user and assistant messages." />
+      </StackPanel>
+
+      <!-- Format -->
+      <StackPanel Name="FormatStackPanel"
+                  Orientation="Vertical">
+        <TextBlock Text="Format:"
+                   Margin="8,2,8,2"
+                   Padding="0,4,0,4"
+                   FontSize="{DynamicResource SettingHeaderFontSize}" />
+        <ComboBox SelectedItem="{Binding Format}"
+                  Margin="8,0,8,0"
+                  Padding="8"
+                  FontSize="{DynamicResource SettingContentFontSize}"
+                  HorizontalAlignment="Stretch"
+                  ToolTip.Tip="Format used to display new messages." >
+          <ComboBox.ItemsSource>
+            <generic:List x:TypeArguments="x:String">
+              <x:String>Text</x:String>
+              <x:String>Markdown</x:String>
+              <x:String>Html</x:String>
+            </generic:List>
+          </ComboBox.ItemsSource>
+        </ComboBox>
+      </StackPanel>
+
+      <!-- Model -->
+      <StackPanel Name="ModelStackPanel"
+                  Orientation="Vertical">
+        <TextBlock Text="Model:"
+                   Margin="8,2,8,2"
+                   Padding="0,4,0,4"
+                   FontSize="{DynamicResource SettingHeaderFontSize}" />
+        <AutoCompleteBox Text="{Binding Model}"
+                         Watermark="Override OpenAI ID of the model to use"
+                         Margin="8,4,8,4"
+                         Padding="8"
+                         FontSize="{DynamicResource SettingContentFontSize}"
+                         ToolTip.Tip="Override OpenAI ID of the model to use. By default OPENAI_API_MODEL environment variable is used.">
+          <AutoCompleteBox.Items>
+            <generic:List x:TypeArguments="system:String">
+              <x:String>gpt-3.5-turbo</x:String>
+              <x:String>gpt-4</x:String>
+            </generic:List>
+          </AutoCompleteBox.Items>
+        </AutoCompleteBox>
+      </StackPanel>
+
+
       <!-- Temperature -->
       <StackPanel Name="TemperatureStackPanel"
                   Orientation="Vertical">
@@ -114,28 +178,6 @@
                        ToolTip.Tip="How much to penalize new tokens based on whether they appear in the text so far. Increases the model's likelihood to talk about new topics." />
       </StackPanel>
 
-      <!-- Model -->
-      <StackPanel Name="ModelStackPanel"
-                  Orientation="Vertical">
-        <TextBlock Text="Model:" 
-                   Margin="8,2,8,2" 
-                   Padding="0,4,0,4" 
-                   FontSize="{DynamicResource SettingHeaderFontSize}" />
-        <AutoCompleteBox Text="{Binding Model}"  
-                         Watermark="Override OpenAI ID of the model to use"
-                         Margin="8,4,8,4" 
-                         Padding="8" 
-                         FontSize="{DynamicResource SettingContentFontSize}"
-                         ToolTip.Tip="Override OpenAI ID of the model to use. By default OPENAI_API_MODEL environment variable is used.">
-          <AutoCompleteBox.Items>
-            <generic:List x:TypeArguments="system:String">
-              <x:String>gpt-3.5-turbo</x:String>
-              <x:String>gpt-4</x:String>
-            </generic:List>
-          </AutoCompleteBox.Items>
-        </AutoCompleteBox>
-      </StackPanel>
-
       <!-- ApiKey -->
       <StackPanel Name="ApiKeyStackPanel"
                   Orientation="Vertical">
@@ -173,46 +215,6 @@
         </AutoCompleteBox>
       </StackPanel>
 
-      <!-- Format -->
-      <StackPanel Name="FormatStackPanel"
-                  Orientation="Vertical">
-        <TextBlock Text="Format:" 
-                   Margin="8,2,8,2" 
-                   Padding="0,4,0,4" 
-                   FontSize="{DynamicResource SettingHeaderFontSize}" />
-        <ComboBox SelectedItem="{Binding Format}"
-                  Margin="8,0,8,0" 
-                  Padding="8" 
-                  FontSize="{DynamicResource SettingContentFontSize}"
-                  HorizontalAlignment="Stretch"
-                  ToolTip.Tip="Format used to display new messages." >
-          <ComboBox.ItemsSource>
-            <generic:List x:TypeArguments="x:String">
-              <x:String>Text</x:String>
-              <x:String>Markdown</x:String>
-              <x:String>Html</x:String>
-            </generic:List>
-          </ComboBox.ItemsSource>
-        </ComboBox>
-      </StackPanel>
-
-      <!-- Directions -->
-      <StackPanel Name="DirectionsStackPanel"
-                  Orientation="Vertical">
-        <TextBlock Text="Prompt:" 
-                   Margin="8,2,8,2" 
-                   Padding="0,4,0,4" 
-                   FontSize="{DynamicResource SettingHeaderFontSize}" />
-        <TextBox Text="{Binding Directions}" 
-                 Watermark="Chat prompt initial system directions"
-                 TextWrapping="Wrap"
-                 AcceptsReturn="True"
-                 Margin="8,0,8,0" 
-                 Padding="8" 
-                 MaxHeight="188"
-                 FontSize="{DynamicResource SettingContentFontSize}"
-                 ToolTip.Tip="The system message (directions) helps set the behavior of the assistant. Typically, a conversation is formatted with a system message first, followed by alternating user and assistant messages." />
-      </StackPanel>
 
     </SelectingItemsControl>
   </ScrollViewer>

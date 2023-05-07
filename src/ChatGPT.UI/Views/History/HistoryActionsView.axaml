@@ -12,21 +12,6 @@
   </Design.DataContext>
   <DockPanel HorizontalAlignment="Stretch"
              LastChildFill="False">
-    <!-- Add -->
-    <Button Command="{Binding AddChatCommand}"
-            ToolTip.Tip="Add"
-            Background="#00FFFFFF" 
-            BorderBrush="#00000000"
-            BorderThickness="1"
-            CornerRadius="4"
-            Margin="0,0,0,0" 
-            Padding="8"
-            DockPanel.Dock="Left">
-      <PathIcon Data="{DynamicResource AddIcon}"
-                Width="24" 
-                Height="24"
-                Foreground="{DynamicResource ActionIconBrush}"/>
-    </Button>
     <!-- Delete -->
     <Button Command="{Binding DeleteChatCommand}"
             ToolTip.Tip="Delete"

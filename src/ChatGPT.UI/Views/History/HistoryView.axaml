@@ -22,6 +22,8 @@
     </vm:MainViewModel>
   </Design.DataContext>
   <DockPanel VerticalAlignment="Stretch">
+    <history:HistoryActionsTopView DockPanel.Dock="Top"
+                                Margin="0,0,0,0"/>
     <views:HeaderView Header="Chats"
                       Margin="0,6,0,12"
                       DockPanel.Dock="Top" />
@@ -46,7 +48,7 @@
               Background="Transparent">
       <TreeView.ItemTemplate>
         <TreeDataTemplate DataType="vmc:ChatViewModel" ItemsSource="{Binding Chats}">
-          <StackPanel Orientation="Horizontal">
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
             <PathIcon Data="{DynamicResource ChatIcon}"
                       Width="24"
                       Height="24"

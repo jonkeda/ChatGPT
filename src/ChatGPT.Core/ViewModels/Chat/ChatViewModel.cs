@@ -9,13 +9,20 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using AI;
 using AI.Model.Json.Chat;
 using AI.Model.Services;
+using ChatGPT.Model.Chapters;
 using ChatGPT.Model.Services;
 using ChatGPT.ViewModels.ChildChat;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Markdig.ChatGpt.Extensions;
+using Markdig.ChatGpt.Model;
+using Markdig.Syntax;
+using Markdig.Wpf;
+using Markdown = Markdig.Markdown;
 
 namespace ChatGPT.ViewModels.Chat;
 
@@ -542,38 +549,94 @@ public class ChatViewModel : ObservableObject
     {
         if (child.ChatCreation == ChatCreation.Single)
         {
-            if (string.IsNullOrEmpty(child.Name))
-            {
-                child.Name = "Chat";
-            }
-
-            AddNewChildChat(child, child.Prompt);
+            CreateNewChildChatSingle(child);
         }
         else if (child is { ChatCreation: ChatCreation.PerLine, Data: { } })
         {
-            var sr = new StringReader(child.Data);
-            while (sr.ReadLine() is { } line)
-            {
-                if (string.IsNullOrEmpty(line))
-                {
-                    continue;
-                }
-                child.Name = line;
-                AddNewChildChat(child, $"{child.Prompt}\n {line}");
-            }
+            CreateNewChildChatPerLine(child);
         }
-
+        else if (child is {ChatCreation  : ChatCreation.PerChapter, Data: { } })
+        {
+            CreateNewChildChatPerChapter(child);
+        }
     }
 
-    private void AddNewChildChat(ChildChatViewModel child, string? prompt)
+    private  void CreateNewChildChatPerChapter(ChildChatViewModel child)
+    {
+        var document = MarkdownModel.ToDocumentModel(child.Data!);
+        var chapters = new ChapterCollection();
+
+        CreateChapter(document.Blocks, chapters);
+
+        CreateChapterChat(this, child, chapters);
+    }
+
+    private void CreateChapterChat(ChatViewModel parent, ChildChatViewModel child, ChapterCollection chapters)
+    {
+        foreach (var chapter in chapters)
+        {
+            var newChat = parent.AddNewChildChat(child.SettingPrompt, chapter.Name, $"{child.Prompt}\n {chapter.Name}");
+            CreateChapterChat(newChat,child, chapter.Chapters);
+        }
+    }
+
+    private static void CreateChapter(BlockModelCollection blocks, ChapterCollection chapters)
+    {
+        Chapter? chapter = null;
+        foreach (var block in blocks)
+        {
+            if (block is ParagraphModel pb)
+            {
+                chapter = new Chapter() { Name = pb.ToText() };
+                chapters.Add(chapter);
+            }
+            else if (block is ListModel lbm)
+            {
+                ChapterCollection childChapters;
+                if (chapter != null)
+                {
+                    childChapters = chapter.Chapters;
+                }
+                else
+                {
+                    childChapters = chapters;
+                }
+                foreach (var item in lbm.Items)
+                {
+                    CreateChapter(item.Blocks, childChapters);
+                }
+            }
+        }
+    }
+
+    private void CreateNewChildChatSingle(ChildChatViewModel child)
+    {
+        AddNewChildChat(child.SettingPrompt, "Chat", child.Prompt);
+    }
+
+    private void CreateNewChildChatPerLine(ChildChatViewModel child)
+    {
+        var sr = new StringReader(child.Data);
+        while (sr.ReadLine() is { } line)
+        {
+            if (string.IsNullOrEmpty(line))
+            {
+                continue;
+            }
+            AddNewChildChat(child.SettingPrompt, line, $"{child.Prompt}\n {line}");
+        }
+    }
+
+    private ChatViewModel AddNewChildChat(string? settingPrompt, string name, string? prompt)
     {
         var childChat = new ChatViewModel(Settings!)
         {
-            Name = child.Name
+            Name = name
         };
-        childChat.AddMessage("system", child.SettingPrompt, true, false);
+        childChat.AddMessage("system", settingPrompt, true, false);
         childChat.AddMessage("user", prompt, false, false);
         Chats.Add(childChat);
+        return childChat;
     }
 
     public void AddMessage(string role, string? message, bool isSent, bool canRemove)

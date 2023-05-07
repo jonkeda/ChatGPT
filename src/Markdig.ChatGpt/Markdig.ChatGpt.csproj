@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Authors>Daan Jonkers</Authors>
+    <Copyright>Copyright © Daan Jonkers 2023</Copyright>
+    <Description>A WPF library for lunet-io/markdig</Description>
+    <AssemblyName>Markdig.Wpf</AssemblyName>
+    <AssemblyTitle>Markdig.Wpf</AssemblyTitle>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <VersionPrefix>0.5.0.1</VersionPrefix>
+    <TargetFrameworks>net7.0;net462</TargetFrameworks>
+    <SignAssembly Condition="'$(Configuration)' == 'Release_Signed'">true</SignAssembly>
+    <PackageId>Markdig.Wpf</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>Markdown CommonMark md</PackageTags>
+    <!-- /begin support for sourcelink -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- /end support for sourcelink -->
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release_Signed'">true</GeneratePackageOnBuild>
+    <UseWPF>false</UseWPF>
+    <Configurations>Debug;Release;Release_Signed</Configurations>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
+    <Company />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(SignAssembly)' == 'true' ">
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(SignAssembly)' == 'true' ">
+    <PackageReference Include="Markdig.Signed" Version="0.22.0" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(SignAssembly)' == 'false' ">
+    <PackageReference Include="Markdig" Version="0.31.0" />
+  </ItemGroup>
+</Project>

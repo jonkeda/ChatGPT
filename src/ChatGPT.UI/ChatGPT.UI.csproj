@@ -42,6 +42,9 @@
     <Compile Update="Views\ChildChat\AddChildChatView.axaml.cs">
       <DependentUpon>AddChildChatView.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\History\HistoryActionsTopView.axaml.cs">
+      <DependentUpon>HistoryActionsTopView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\Search\SearchActionsView.axaml.cs">
       <DependentUpon>SearchActionsView.axaml</DependentUpon>
     </Compile>

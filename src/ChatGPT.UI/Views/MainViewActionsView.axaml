@@ -10,81 +10,12 @@
   <Design.DataContext>
     <vm:MainViewModel />
   </Design.DataContext>
-  <Grid>
 
-    <StackPanel Orientation="Horizontal">
-      <Button Name="SearchButton"
-              Command="{Binding CurrentLayout.ShowSearchCommand}"
-              ToolTip.Tip="Search"
-              VerticalAlignment="Bottom"
-              BorderBrush="#00000000"
-              BorderThickness="2"
-              Background="#00FFFFFF"
-              CornerRadius="4"
-              Padding="12"
-              Margin="0,16,0,0">
-        <PathIcon Data="{DynamicResource SearchIcon}"
-                  Width="24"
-                  Height="24"
-                  Opacity="0.5"
-                  Foreground="{DynamicResource SettingsIconBrush}" />
-      </Button>
-
-      <Button Name="HistoryButton"
-              Command="{Binding CurrentLayout.ShowChatsCommand}"
-              ToolTip.Tip="History"
-              VerticalAlignment="Bottom"
-              BorderBrush="#00000000"
-              BorderThickness="2"
-              Background="#00FFFFFF"
-              CornerRadius="4"
-              Padding="12"
-              Margin="0,16,0,0">
-        <PathIcon Data="{DynamicResource HistoryIcon}"
-                  Width="24"
-                  Height="24"
-                  Opacity="0.5"
-                  Foreground="{DynamicResource SettingsIconBrush}" />
-      </Button>
-
-      <Button Name="SettingsButton"
-              Command="{Binding CurrentLayout.ShowSettingsCommand}"
-              ToolTip.Tip="Settings"
-              VerticalAlignment="Bottom"
-              BorderBrush="#00000000"
-              BorderThickness="2"
-              Background="#00FFFFFF"
-              CornerRadius="4"
-              Padding="12"
-              Margin="0,16,0,0">
-        <PathIcon Data="{DynamicResource SettingsIcon}"
-                  Width="24"
-                  Height="24"
-                  Opacity="0.5"
-                  Foreground="{DynamicResource SettingsIconBrush}" />
-      </Button>
-      <Button Name="PromptsButton"
-              Command="{Binding CurrentLayout.ShowPromptsCommand}"
-              ToolTip.Tip="Prompts"
-              VerticalAlignment="Bottom"
-              BorderBrush="#00000000"
-              BorderThickness="2"
-              Background="#00FFFFFF"
-              CornerRadius="4"
-              Padding="12"
-              Margin="0,16,0,0">
-        <PathIcon Data="{DynamicResource DirectionsIcon}"
-                  Width="24"
-                  Height="24"
-                  Opacity="0.5"
-                  Foreground="{DynamicResource SettingsIconBrush}" />
-      </Button>
-    </StackPanel>
-    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-
-      <Button Name="DesktopMobileButton"
-            Command="{Binding ChangeDesktopMobileCommand}"
-            ToolTip.Tip="Change desktop/mobile"
+  <DockPanel  HorizontalAlignment="Stretch"
+              LastChildFill="False">
+    <Button Name="SearchButton" DockPanel.Dock="Left"
+            Command="{Binding CurrentLayout.ShowSearchCommand}"
+            ToolTip.Tip="Search"
             VerticalAlignment="Bottom"
             BorderBrush="#00000000"
             BorderThickness="2"
@@ -92,65 +23,133 @@
             CornerRadius="4"
             Padding="12"
             Margin="0,16,0,0">
-        <Panel>
-          <PathIcon Data="{DynamicResource ViewDesktopIcon}"
-                    IsVisible="{Binding CurrentLayout, Converter={x:Static converters:LayoutVisibilityConverter.Instance}, ConverterParameter='Desktop'}"
-                    Width="24"
-                    Height="24"
-                    Opacity="0.5"
-                    Foreground="{DynamicResource SettingsIconBrush}" />
-          <PathIcon Data="{DynamicResource ViewDesktopMobileIcon}"
-                    IsVisible="{Binding CurrentLayout, Converter={x:Static converters:LayoutVisibilityConverter.Instance}, ConverterParameter='Mobile'}"
-                    Width="24"
-                    Height="24"
-                    Opacity="0.5"
-                    Foreground="{DynamicResource SettingsIconBrush}" />
-        </Panel>
-      </Button>
-      <Button Name="TopmostOnOffButton"
-              Command="{Binding ChangeTopmostCommand}"
-              ToolTip.Tip="Change topmost"
-              VerticalAlignment="Bottom"
-              BorderBrush="#00000000"
-              BorderThickness="2"
-              Background="#00FFFFFF"
-              CornerRadius="4"
-              Padding="12"
-              Margin="0,16,0,0"
-              IsVisible="{OnFormFactor Desktop=True, Mobile=False}">
-        <Panel>
-          <PathIcon Data="{DynamicResource PinIcon}"
-                    IsVisible="{Binding Topmost}"
-                    Width="24"
-                    Height="24"
-                    Opacity="0.5"
-                    Foreground="{DynamicResource SettingsIconBrush}" />
-          <PathIcon Data="{DynamicResource PinOffIcon}"
-                    IsVisible="{Binding !Topmost}"
-                    Width="24"
-                    Height="24"
-                    Opacity="0.5"
-                    Foreground="{DynamicResource SettingsIconBrush}" />
-        </Panel>
-      </Button>
-      <Button Name="ThemeButton"
-              Command="{Binding ChangeThemeCommand}"
-              ToolTip.Tip="Change theme"
-              VerticalAlignment="Bottom"
-              BorderBrush="#00000000"
-              BorderThickness="2"
-              Background="#00FFFFFF"
-              CornerRadius="4"
-              Padding="12"
-              Margin="0,16,0,0">
-        <PathIcon Data="{DynamicResource DarkThemeIcon}"
+      <PathIcon Data="{DynamicResource SearchIcon}"
+                Width="24"
+                Height="24"
+                Opacity="0.5"
+                Foreground="{DynamicResource SettingsIconBrush}" />
+    </Button>
+
+    <Button Name="HistoryButton" DockPanel.Dock="Left"
+            Command="{Binding CurrentLayout.ShowChatsCommand}"
+            ToolTip.Tip="History"
+            VerticalAlignment="Bottom"
+            BorderBrush="#00000000"
+            BorderThickness="2"
+            Background="#00FFFFFF"
+            CornerRadius="4"
+            Padding="12"
+            Margin="0,16,0,0">
+      <PathIcon Data="{DynamicResource HistoryIcon}"
+                Width="24"
+                Height="24"
+                Opacity="0.5"
+                Foreground="{DynamicResource SettingsIconBrush}" />
+    </Button>
+
+    <Button Name="SettingsButton" DockPanel.Dock="Left"
+            Command="{Binding CurrentLayout.ShowSettingsCommand}"
+            ToolTip.Tip="Settings"
+            VerticalAlignment="Bottom"
+            BorderBrush="#00000000"
+            BorderThickness="2"
+            Background="#00FFFFFF"
+            CornerRadius="4"
+            Padding="12"
+            Margin="0,16,0,0">
+      <PathIcon Data="{DynamicResource SettingsIcon}"
+                Width="24"
+                Height="24"
+                Opacity="0.5"
+                Foreground="{DynamicResource SettingsIconBrush}" />
+    </Button>
+    <Button Name="PromptsButton" DockPanel.Dock="Left"
+            Command="{Binding CurrentLayout.ShowPromptsCommand}"
+            ToolTip.Tip="Prompts"
+            VerticalAlignment="Bottom"
+            BorderBrush="#00000000"
+            BorderThickness="2"
+            Background="#00FFFFFF"
+            CornerRadius="4"
+            Padding="12"
+            Margin="0,16,0,0">
+      <PathIcon Data="{DynamicResource DirectionsIcon}"
+                Width="24"
+                Height="24"
+                Opacity="0.5"
+                Foreground="{DynamicResource SettingsIconBrush}" />
+    </Button>
+
+
+    <Button Name="DesktopMobileButton" DockPanel.Dock="Right"
+          Command="{Binding ChangeDesktopMobileCommand}"
+          ToolTip.Tip="Change desktop/mobile"
+          VerticalAlignment="Bottom"
+          BorderBrush="#00000000"
+          BorderThickness="2"
+          Background="#00FFFFFF"
+          CornerRadius="4"
+          Padding="12"
+          Margin="0,16,0,0">
+      <Panel>
+        <PathIcon Data="{DynamicResource ViewDesktopIcon}"
+                  IsVisible="{Binding CurrentLayout, Converter={x:Static converters:LayoutVisibilityConverter.Instance}, ConverterParameter='Desktop'}"
                   Width="24"
                   Height="24"
                   Opacity="0.5"
-                  Foreground="{DynamicResource ThemeIconBrush}" />
-      </Button>
-    </StackPanel>
-  </Grid>
+                  Foreground="{DynamicResource SettingsIconBrush}" />
+        <PathIcon Data="{DynamicResource ViewDesktopMobileIcon}"
+                  IsVisible="{Binding CurrentLayout, Converter={x:Static converters:LayoutVisibilityConverter.Instance}, ConverterParameter='Mobile'}"
+                  Width="24"
+                  Height="24"
+                  Opacity="0.5"
+                  Foreground="{DynamicResource SettingsIconBrush}" />
+      </Panel>
+    </Button>
+    <Button Name="TopmostOnOffButton" DockPanel.Dock="Right"
+            Command="{Binding ChangeTopmostCommand}"
+            ToolTip.Tip="Change topmost"
+            VerticalAlignment="Bottom"
+            BorderBrush="#00000000"
+            BorderThickness="2"
+            Background="#00FFFFFF"
+            CornerRadius="4"
+            Padding="12"
+            Margin="0,16,0,0"
+            IsVisible="{OnFormFactor Desktop=True, Mobile=False}">
+      <Panel>
+        <PathIcon Data="{DynamicResource PinIcon}"
+                  IsVisible="{Binding Topmost}"
+                  Width="24"
+                  Height="24"
+                  Opacity="0.5"
+                  Foreground="{DynamicResource SettingsIconBrush}" />
+        <PathIcon Data="{DynamicResource PinOffIcon}"
+                  IsVisible="{Binding !Topmost}"
+                  Width="24"
+                  Height="24"
+                  Opacity="0.5"
+                  Foreground="{DynamicResource SettingsIconBrush}" />
+      </Panel>
+    </Button>
+
+    <Button Name="ThemeButton" DockPanel.Dock="Right"
+            Command="{Binding ChangeThemeCommand}"
+            ToolTip.Tip="Change theme"
+            VerticalAlignment="Bottom"
+            BorderBrush="#00000000"
+            BorderThickness="2"
+            Background="#00FFFFFF"
+            CornerRadius="4"
+            Padding="12"
+            Margin="0,16,0,0">
+      <PathIcon Data="{DynamicResource DarkThemeIcon}"
+                Width="24"
+                Height="24"
+                Opacity="0.5"
+                Foreground="{DynamicResource ThemeIconBrush}" />
+    </Button>
+  </DockPanel>
 
 </UserControl>
 

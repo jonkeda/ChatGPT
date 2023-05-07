@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ChatGPT.ViewModels;assembly=ChatGPT.Core"
+             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="450"
+             x:Class="ChatGPT.Views.History.HistoryActionsTopView"
+             x:CompileBindings="True" x:DataType="vm:MainViewModel">
+  <Design.DataContext>
+    <vm:MainViewModel>
+    </vm:MainViewModel>
+  </Design.DataContext>
+  <DockPanel HorizontalAlignment="Stretch"
+             LastChildFill="False">
+    <!-- Add -->
+    <Button Command="{Binding AddChatCommand}"
+            ToolTip.Tip="Add"
+            Background="#00FFFFFF" 
+            BorderBrush="#00000000"
+            BorderThickness="1"
+            CornerRadius="4"
+            Margin="0,0,0,0" 
+            Padding="8"
+            DockPanel.Dock="Left">
+      <StackPanel Orientation="Horizontal">
+        <PathIcon Data="{DynamicResource AddIcon}"
+                  Width="24"
+                  Height="24"
+                  Foreground="{DynamicResource ActionIconBrush}"/>
+        <TextBlock Text="new chat"
+                   Margin="0,0,0,0"
+                   Padding="8"/>
+      </StackPanel>
+    </Button>
+  </DockPanel>
+</UserControl>

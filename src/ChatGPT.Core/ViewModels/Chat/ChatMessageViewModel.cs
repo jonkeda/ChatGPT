@@ -26,6 +26,7 @@ public class ChatMessageViewModel : ObservableObject
     private int _promptTokens;
     private int _completionTokens;
     private int _totalTokens;
+    private bool _focus;
 
     [JsonConstructor]
     public ChatMessageViewModel()

@@ -82,7 +82,7 @@
         </controls:InvalidateContentControl>
         <!-- Prompt -->
         <chat:ChatMessagePromptView IsVisible="{Binding !IsAwaiting}"
-                                    VerticalAlignment="Center"
+                                    VerticalAlignment="Center" 
                                     Margin="8,16,8,16"/>
         <!-- Progress -->
         <ProgressBar Margin="16,16,16,16"

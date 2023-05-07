@@ -15,7 +15,7 @@ public class ChildChatViewModel : ObservableObject
     private string? _name;
     private string? _prompt;
     private string? _data;
-    private ChatCreation _chatCreation;
+    private ChatCreation? _chatCreation = ChildChat.ChatCreation.PerLine;
 
     public ChildChatViewModel(ChatViewModel chatViewModel)
     {
@@ -69,7 +69,7 @@ public class ChildChatViewModel : ObservableObject
     }
 
     [JsonIgnore]
-    public ChatCreation ChatCreation
+    public ChatCreation? ChatCreation
     {
         get => _chatCreation;
         set => SetProperty(ref _chatCreation, value);
@@ -110,5 +110,6 @@ public class ChildChatViewModel : ObservableObject
 public enum ChatCreation
 {
     Single,
-    PerLine
+    PerLine,
+    PerChapter
 }

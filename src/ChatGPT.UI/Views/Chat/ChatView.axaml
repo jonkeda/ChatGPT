@@ -23,38 +23,39 @@
       </vm:ChatViewModel.Messages>
     </vm:ChatViewModel>
   </Design.DataContext>
-  <DockPanel>
-    <Grid DockPanel.Dock="Bottom" 
+  <DockPanel HorizontalAlignment="Stretch" >
+    <Grid DockPanel.Dock="Bottom"
           IsVisible="{Binding !ChildChat.IsEnabled}">
       <chat:ChatUsageView DataContext="{Binding CurrentMessage}"/>
     </Grid>
 
-    <ScrollViewer Name="ChatScrollViewer"
-                  HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto"
-                  IsVisible="{Binding !ChildChat.IsEnabled}">
-      <SelectingItemsControl Name="MessagesItemsControl"
-                             ItemsSource="{Binding Messages}"
-                             SelectedItem="{Binding CurrentMessage}"
-                             AutoScrollToSelectedItem="True">
-        <SelectingItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <!-- TODO: Use VirtualizingStackPanel instead of StackPanel -->
-            <!-- <VirtualizingStackPanel /> -->
-            <StackPanel />
-          </ItemsPanelTemplate>
-        </SelectingItemsControl.ItemsPanel>
-        <SelectingItemsControl.DataTemplates>
-          <DataTemplate DataType="vm:ChatMessageViewModel">
-            <chat:ChatMessageView Margin="2,0,6,0" />
-          </DataTemplate>
-        </SelectingItemsControl.DataTemplates>
-      </SelectingItemsControl>
-    </ScrollViewer>
+    <Grid >
+      <ScrollViewer Name="ChatScrollViewer"
+                    IsVisible="{Binding !ChildChat.IsEnabled}"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+        <SelectingItemsControl Name="MessagesItemsControl"
+                               ItemsSource="{Binding Messages}"
+                               SelectedItem="{Binding CurrentMessage}"
+                               AutoScrollToSelectedItem="True">
+          <SelectingItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <!-- TODO: Use VirtualizingStackPanel instead of StackPanel -->
+              <!-- <VirtualizingStackPanel /> -->
+              <StackPanel />
+            </ItemsPanelTemplate>
+          </SelectingItemsControl.ItemsPanel>
+          <SelectingItemsControl.DataTemplates>
+            <DataTemplate DataType="vm:ChatMessageViewModel">
+              <chat:ChatMessageView Margin="2,0,6,0"/>
+            </DataTemplate>
+          </SelectingItemsControl.DataTemplates>
+        </SelectingItemsControl>
+      </ScrollViewer>
 
-    <childChat:AddChildChatView DataContext="{Binding ChildChat}"
-                                VerticalAlignment="Stretch"
-                                IsVisible="{Binding IsEnabled}"/>
-
+      <childChat:AddChildChatView DataContext="{Binding ChildChat}"
+                                  VerticalAlignment="Stretch"
+                                  IsVisible="{Binding IsEnabled}"/>
+    </Grid>
   </DockPanel>
 </UserControl>

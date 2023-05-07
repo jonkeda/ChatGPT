@@ -71,16 +71,22 @@
                       Background="Transparent"
                       Grid.Column="2" />
 
+        <chat:ChatView HorizontalAlignment="Stretch" 
+                       DataContext="{Binding CurrentChat}"
+                       VerticalAlignment="Top"
+                       Grid.Column="3"/>
+        <!--
         <ContentControl Content="{Binding CurrentChat}"
+                        HorizontalAlignment="Stretch"
                         VerticalAlignment="Top"
                         Grid.Column="3">
           <ContentControl.ContentTemplate>
             <DataTemplate DataType="vmc:ChatViewModel">
-              <chat:ChatView />
+              <chat:ChatView HorizontalAlignment="Stretch" />
             </DataTemplate>
           </ContentControl.ContentTemplate>
         </ContentControl>
-    
+        -->
         <GridSplitter Name="SettingsSplitter" 
                       ResizeBehavior="PreviousAndNext"
                       ResizeDirection="Columns"
