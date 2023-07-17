@@ -1,16 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Data.SqlTypes;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using AI;
 using AI.Model.Json.Chat;
 using AI.Model.Services;
@@ -20,9 +15,7 @@ using ChatGPT.ViewModels.ChildChat;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Markdig.ChatGpt.Extensions;
 using Markdig.ChatGpt.Model;
-using Markdig.Syntax;
 using Markdig.Wpf;
-using Markdown = Markdig.Markdown;
 
 namespace ChatGPT.ViewModels.Chat;
 
@@ -30,7 +23,7 @@ public class ChatViewModel : ObservableObject
 {
     private string? _name;
     private ChatSettingsViewModel? _settings;
-    private ObservableCollection<ChatMessageViewModel> _messages;
+    private ChatMessageViewModelCollection _messages;
     private ChatMessageViewModel? _currentMessage;
     private bool _isEnabled;
     private CancellationTokenSource? _cts;
@@ -40,7 +33,7 @@ public class ChatViewModel : ObservableObject
     [JsonConstructor]
     public ChatViewModel()
     {
-        _messages = new ObservableCollection<ChatMessageViewModel>();
+        _messages = new ChatMessageViewModelCollection(this);
         _chats = new ObservableCollection<ChatViewModel>();
         _childChat = new ChildChatViewModel(this);
         _isEnabled = true;
@@ -89,10 +82,17 @@ public class ChatViewModel : ObservableObject
     }
 
     [JsonPropertyName("messages")]
-    public ObservableCollection<ChatMessageViewModel> Messages
+    public ChatMessageViewModelCollection Messages
     {
         get => _messages;
-        set => SetProperty(ref _messages, value);
+        set
+        {
+            SetProperty(ref _messages, value);
+            if (_messages != null)
+            {
+                _messages.Chat = this;
+            }
+        }
     }
 
     [JsonPropertyName("chats")]
@@ -223,7 +223,7 @@ public class ChatViewModel : ObservableObject
             {
                 var nextMessage = new ChatMessageViewModel
                 {
-                    Role = "user",
+                    Role = Roles.User,
                     Message = "",
                     IsSent = false,
                     CanRemove = true,
@@ -232,7 +232,6 @@ public class ChatViewModel : ObservableObject
                     CompletionTokens = result!.CompletionTokens,
                     TotalTokens = result!.TotalTokens,
                 };
-                SetMessageActions(nextMessage);
                 Messages.Add(nextMessage);
                 CurrentMessage = nextMessage;
 
@@ -267,7 +266,6 @@ public class ChatViewModel : ObservableObject
             IsAwaiting = true,
             Format = Defaults.TextMessageFormat
         };
-        SetMessageActions(resultMessage);
         Messages.Add(resultMessage);
         CurrentMessage = resultMessage;
 
@@ -304,28 +302,8 @@ public class ChatViewModel : ObservableObject
 
         // TODO: Ensure that chat prompt does not exceed maximum token limit.
 
-        for (var i = 0; i < Messages.Count; i++)
+        foreach (var message in Messages)
         {
-            var message = Messages[i];
-
-            if (i == 0)
-            {
-                var content = Settings?.Directions ?? "";
-
-                if (message.Message != Defaults.WelcomeMessage)
-                {
-                    content = message.Message;
-                }
-
-                chatMessages.Add(new ChatMessage
-                {
-                    Role = message.Role,
-                    Content = content
-                });
-
-                continue;
-            }
-
             if (!string.IsNullOrEmpty(message.Message))
             {
                 chatMessages.Add(new ChatMessage
@@ -481,7 +459,7 @@ public class ChatViewModel : ObservableObject
     {
         Messages.Add(new ChatMessageViewModel
         {
-            Role = "system",
+            Role = Roles.System,
             Message = message
         });
         return this;
@@ -507,9 +485,10 @@ public class ChatViewModel : ObservableObject
         return this;
     }
 
-    private ObservableCollection<ChatMessageViewModel> CopyMessages(out ChatMessageViewModel? currentMessage)
+    private ChatMessageViewModelCollection CopyMessages(ChatViewModel chat,
+        out ChatMessageViewModel? currentMessage)
     {
-        var messages = new ObservableCollection<ChatMessageViewModel>();
+        var messages = new ChatMessageViewModelCollection(chat);
 
         currentMessage = null;
 
@@ -530,13 +509,14 @@ public class ChatViewModel : ObservableObject
 
     public ChatViewModel Copy()
     {
-        return new ChatViewModel
+        var chat = new ChatViewModel
         {
             Name = _name,
             Settings = _settings?.Copy(),
-            Messages = CopyMessages(out var currentMessage),
-            CurrentMessage = currentMessage
         };
+        chat.Messages = CopyMessages(chat, out var currentMessage);
+        chat.CurrentMessage = currentMessage;
+        return chat;
     }
 
 
@@ -555,28 +535,57 @@ public class ChatViewModel : ObservableObject
         {
             CreateNewChildChatPerLine(child);
         }
-        else if (child is {ChatCreation  : ChatCreation.PerChapter, Data: { } })
+        else if (child is { ChatCreation: ChatCreation.From_Table_Of_Contents, Data: { } })
         {
-            CreateNewChildChatPerChapter(child);
+            CreateNewChildChatFromTableOfContents(child);
         }
     }
 
-    private  void CreateNewChildChatPerChapter(ChildChatViewModel child)
+    private void CreateNewChildChatFromTableOfContents(ChildChatViewModel child)
     {
         var document = MarkdownModel.ToDocumentModel(child.Data!);
         var chapters = new ChapterCollection();
 
         CreateChapter(document.Blocks, chapters);
 
-        CreateChapterChat(this, child, chapters);
+        CreateChatChapter(this, child.SettingPrompt, chapters, child.Data, this.Name);
     }
 
-    private void CreateChapterChat(ChatViewModel parent, ChildChatViewModel child, ChapterCollection chapters)
+    private void CreateChatChapter(ChatViewModel parent, 
+        string? settingPrompt, 
+        ChapterCollection chapters,
+        string? tableOfContents,
+        string? bookname)
     {
         foreach (var chapter in chapters)
         {
-            var newChat = parent.AddNewChildChat(child.SettingPrompt, chapter.Name, $"{child.Prompt}\n {chapter.Name}");
-            CreateChapterChat(newChat,child, chapter.Chapters);
+            var newChat = parent.AddNewChildChat(settingPrompt, 
+                chapter.Name, 
+                $@"With the table of contents in mind. Write a chapter introduction for ""{chapter.Name}"" of the book ""{bookname}""."
+                + " Only write the introduction of this chapter and not any of the others mentioned int the Table of Contents. "
+                + "  Start with a markdown Heading level 1.",
+                $@"This is the given table of contents\n ""{tableOfContents}""");
+            CreateChatSection(newChat, chapter, settingPrompt, chapter.Chapters, tableOfContents, bookname);
+        }
+    }
+
+    private void CreateChatSection(ChatViewModel parent,
+        Chapter parentChapter,
+        string? settingPrompt,
+        ChapterCollection chapters,
+        string? tableOfContents,
+        string? bookname)
+    {
+        foreach (var chapter in chapters)
+        {
+            var newChat = parent.AddNewChildChat(settingPrompt,
+                chapter.Name,
+                $@"With the table of contents in mind. Write the section ""{chapter.Name}"" of chapter ""{parentChapter.Name}"" of the book ""{bookname}""." +
+                " Only write the content of this section and not any of the others mentioned int the Table of Contents. " 
+                + " Start with a markdown Heading level 2.",
+                //$@"With the table of contents in mind. Write a section for chapter ""{parentChapter.Name}"" and section ""{chapter.Name}""",
+                $@"This is the given table of contents\n ""{tableOfContents}""");
+            //CreateChapterChat(newChat, settingPrompt, chapter.Chapters);
         }
     }
 
@@ -611,7 +620,7 @@ public class ChatViewModel : ObservableObject
 
     private void CreateNewChildChatSingle(ChildChatViewModel child)
     {
-        AddNewChildChat(child.SettingPrompt, "Chat", child.Prompt);
+        AddNewChildChat(child.SettingPrompt, "Chat", child.Prompt, null);
     }
 
     private void CreateNewChildChatPerLine(ChildChatViewModel child)
@@ -623,18 +632,20 @@ public class ChatViewModel : ObservableObject
             {
                 continue;
             }
-            AddNewChildChat(child.SettingPrompt, line, $"{child.Prompt}\n {line}");
+            AddNewChildChat(child.SettingPrompt, line, $"{child.Prompt}\n {line}", null);
         }
     }
 
-    private ChatViewModel AddNewChildChat(string? settingPrompt, string name, string? prompt)
+    private ChatViewModel AddNewChildChat(string? settingPrompt, string name, string? prompt, string? tableOfContents)
     {
         var childChat = new ChatViewModel(Settings!)
         {
             Name = name
         };
-        childChat.AddMessage("system", settingPrompt, true, false);
-        childChat.AddMessage("user", prompt, false, false);
+        childChat.AddMessage( Roles.User, settingPrompt, true, true);
+        childChat.AddMessage(Roles.User, $"Write answers in Markdown blocks. For code blocks always define used language.", true, true);
+        childChat.AddMessage(Roles.User, tableOfContents, true, true);
+        childChat.AddMessage(Roles.User, prompt, false, true);
         Chats.Add(childChat);
         return childChat;
     }
@@ -645,15 +656,14 @@ public class ChatViewModel : ObservableObject
         {
             return;
         }
-        var msg = new ChatMessageViewModel 
+        var msg = new ChatMessageViewModel
         {
             Format = Defaults.TextMessageFormat,
-            Role = role, 
+            Role = role,
             Message = message,
             IsSent = isSent,
             CanRemove = canRemove
         };
-        SetMessageActions(msg);
         Messages.Add(msg);
     }
 }

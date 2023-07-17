@@ -83,13 +83,13 @@ public class Chat : IChat
         {
             switch (role)
             {
-                case "system":
+                case Roles.System:
                     _chat.AddSystemMessage(message);
                     break;
-                case "user":
+                case Roles.User:
                     _chat.AddUserMessage(message);
                     break;
-                case "assistant":
+                case Roles.Assistant:
                     _chat.AddAssistantMessage(message);
                     break;
                 default:

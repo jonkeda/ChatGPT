@@ -167,11 +167,6 @@ public partial class MainViewModel : ObservableObject, IPluginContext
         {
             foreach (var chat in workspace.Chats)
             {
-                foreach (var message in chat.Messages)
-                {
-                    chat.SetMessageActions(message);
-                }
-
                 SetChildChatSettings(chat, chat.Settings);
             }
 
@@ -218,10 +213,6 @@ public partial class MainViewModel : ObservableObject, IPluginContext
         foreach (var childChat in chat.Chats)
         {
             childChat.Settings = settings;
-            foreach (var message in childChat.Messages)
-            {
-                childChat.SetMessageActions(message);
-            }
             SetChildChatSettings(childChat, settings);
         }
     }

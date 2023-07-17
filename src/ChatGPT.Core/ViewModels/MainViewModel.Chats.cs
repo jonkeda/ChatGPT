@@ -177,26 +177,34 @@ public partial class MainViewModel
             Settings = CurrentChat?.Settings?.Copy() ?? CreateDefaultChatSettings()
         };
 
-        var welcomeItem = new ChatMessageViewModel
+        var settingsItem = new ChatMessageViewModel
         {
-            Role = "system",
-            Message = Defaults.WelcomeMessage,
+            Role = Roles.System,
+            Message = chat.Settings.Directions,
             Format = Defaults.TextMessageFormat,
             IsSent = true,
             CanRemove = false
         };
-        chat.SetMessageActions(welcomeItem);
-        chat.Messages.Add(welcomeItem);
+        chat.Messages.Add(settingsItem);
+
+        var formatItem = new ChatMessageViewModel
+        {
+            Role = Roles.System,
+            Message = $"Write answers in {chat.Settings.Format} blocks. For code blocks always define used language.",
+            Format = Defaults.TextMessageFormat,
+            IsSent = true,
+            CanRemove = false
+        };
+        chat.Messages.Add(formatItem);
 
         var promptItem = new ChatMessageViewModel
         {
-            Role = "user",
+            Role = Roles.User,
             Message = "",
             Format = Defaults.TextMessageFormat,
             IsSent = false,
             CanRemove = false
         };
-        chat.SetMessageActions(promptItem);
         chat.Messages.Add(promptItem);
 
         chat.CurrentMessage = promptItem;
@@ -257,11 +265,6 @@ public partial class MainViewModel
             MainViewModelJsonContext.s_instance.ChatViewModel);
         if (chat is { })
         {
-            foreach (var message in chat.Messages)
-            {
-                chat.SetMessageActions(message);
-            }
-
             Chats.Add(chat);
             CurrentChat = chat;
         }

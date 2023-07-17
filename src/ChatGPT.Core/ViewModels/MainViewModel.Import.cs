@@ -1,15 +1,7 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using AI.Model.Json.ChatGPT;
-using ChatGPT.Model.Services;
 using ChatGPT.ViewModels.Chat;
-using CommunityToolkit.Mvvm.Input;
 
 namespace ChatGPT.ViewModels;
 
@@ -34,7 +26,7 @@ public partial class MainViewModel
                     var role = message.Role;
                     var content = message.Content?.LastOrDefault();
 
-                    if (role == "system" && string.IsNullOrEmpty(content))
+                    if (role == Roles.System && string.IsNullOrEmpty(content))
                     {
                         content = "You are a helpful assistant.";
                     }
@@ -43,26 +35,24 @@ public partial class MainViewModel
                     {
                         Role = role,
                         Message = content,
-                        Format = role == "assistant"
+                        Format = role == Roles.Assistant
                             ? Defaults.MarkdownMessageFormat
                             : Defaults.TextMessageFormat,
                         IsSent = true,
                         CanRemove = true
                     };
-                    chat.SetMessageActions(item);
                     chat.Messages.Add(item);
                 }
             }
 
             var prompt = new ChatMessageViewModel
             {
-                Role = "user",
+                Role = Roles.User,
                 Message = "",
                 Format = Defaults.TextMessageFormat,
                 IsSent = false,
                 CanRemove = true
             };
-            chat.SetMessageActions(prompt);
             chat.Messages.Add(prompt);
 
             chat.CurrentMessage = chat.Messages.LastOrDefault();

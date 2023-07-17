@@ -15,7 +15,7 @@ public class ChildChatViewModel : ObservableObject
     private string? _name;
     private string? _prompt;
     private string? _data;
-    private ChatCreation? _chatCreation = ChildChat.ChatCreation.PerLine;
+    private ChatCreation? _chatCreation = ChildChat.ChatCreation.From_Table_Of_Contents;
 
     public ChildChatViewModel(ChatViewModel chatViewModel)
     {
@@ -105,11 +105,4 @@ public class ChildChatViewModel : ObservableObject
 
         Enable();
     }
-}
-
-public enum ChatCreation
-{
-    Single,
-    PerLine,
-    PerChapter
 }

@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using Avalonia;
 using Avalonia.Data.Converters;
+using ChatGPT.ViewModels.Chat;
 
 namespace ChatGPT.Converters;
 
@@ -15,9 +16,9 @@ public class RoleIconConverter : IValueConverter
         {
             var icon = layout switch
             {
-                "system" => "SystemIcon",
-                "user" => "PersonIcon",
-                "assistant" => "ChatIcon",
+                Roles.System => "SystemIcon",
+                Roles.User => "PersonIcon",
+                Roles.Assistant => "ChatIcon",
                 _ => default
             };
 

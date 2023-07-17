@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
+using ChatGPT.ViewModels.Chat;
 
 namespace ChatGPT.Converters;
 
@@ -19,9 +20,9 @@ public class RoleBackgroundColorConverter : IValueConverter
         {
             var icon = layout switch
             {
-                "system" => Brushes.LightGray,
-                "user" => Brushes.White,
-                "assistant" => user,
+                Roles.System => Brushes.LightGray,
+                Roles.User => Brushes.White,
+                Roles.Assistant => user,
                 _ => Brushes.Transparent
             };
             return icon;
